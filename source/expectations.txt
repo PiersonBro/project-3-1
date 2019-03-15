@@ -1,0 +1,4 @@
+* Find an open (,[,{,< push that onto the stack
+* Pop when closing bracket is found
+* Throw an error if a non matching closing bracket is found or 
+  the end of the file is reached and tokens are still in the stack
