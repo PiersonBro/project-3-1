@@ -2,58 +2,33 @@
 #include <stack>
 #include <iostream>
 #include <vector>
+#include <fstream>
+#include "Token.h"
 using namespace std;
 
-struct Token {
-    char token;
-    char bracketType;
-    bool opening;
-    bool isBracket;
-
-    Token(char token): token(token) {
-        if (token == '{' || token == '(' || token == '[') {
-            opening = true;
-            isBracket = true;
-        } else if (token == '}' || token == ')' || token == ']') {
-            opening = false;
-            isBracket = true;
-        } else {
-            opening = false;
-            isBracket = false;
-        }
-
-        if (token == '{' || token == '}') {
-            bracketType = 'C';
-        } else if (token == '(' || token == ')') {
-            bracketType = 'P';
-        } else if (token == '[' || token == ']') {
-            bracketType = 'S';
-        } else {
-            bracketType = '0';
-        }
-    }
-};
-
 int main() {
-    string s = "{for(int i = 0; i < values]; i++)\n((()))2";
-    // vector<Token> tokens;
-    stack<Token> stack;
-    for (auto i = s.begin(); i != s.end(); i++) {
-        Token t = Token(*i);
-        // tokens.push_back(t);
-        if (t.isBracket && t.opening) {
-            stack.push(t);
-        } else if (t.isBracket && !t.opening && stack.top().bracketType == t.bracketType) {
-            stack.pop();
-        }
+    // we used cplusplus.com for more info on if/ofstreams and their members
+    string filename;
+    cout << "Name of file to be checked: ";
+    cin >> filename;
+    // open then read file
+    ifstream FILE;
+    FILE.open(filename);
+    if (FILE.is_open() == false) {
+        cout << "Error opening file." << endl;
+        return -1;
     }
-
-    if (stack.size() != 0) {
-        cout << "Error: No matching bracket found for " << stack.top().token << endl;
-        cout << stack.size() << endl;
-        // cout << stack << endl;
+    string store;
+    string other;
+    while (FILE.eof() != true) {
+        getline(FILE, store);
+        other = other + "\n" + store;
     }
-    
+    cout << other << endl;
+    bool parsed = bracket_parser(other);
+    if (parsed == true) {
+        cout << "Your file is a-ok!" << endl;
+    }
 
     return 0;
 }
